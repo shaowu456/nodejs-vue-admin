@@ -11,7 +11,7 @@
         </el-form-item>
         <el-button size="medium" class="goodsbtnbox" @click="query" type="primary">查询</el-button>
         <el-button size="medium" class="goodsbtnbox" @click="resetQuery">重置</el-button>
-        <el-button size="medium" class="goodsbtnbox" @click="create">新建</el-button>
+        <!-- <el-button size="medium" class="goodsbtnbox" @click="create">新建</el-button> -->
       </el-row>
     </el-form>
     <el-table :data="items">
@@ -43,20 +43,22 @@ export default {
       // console.log('~~~res~create', res);
     },
     async query() {
-      const res = await this.$http.get(`/findListByParent/${this.parent}`, { name: '天' });
+      const res = await this.$http.get(`/findListByParent/${this.parent}`);
       this.items = res.data;
     },
     async fetchParentLists() {
-      const res = await this.$http.get(`/findListByParent/5dce1aa5a8a3823e706a98eb`);
+      const res = await this.$http.get(`/findListByParent/all`);
       this.parentList = res.data;
     },
     resetQuery() {
+      this.parent = '';
       this.fetch()
     },
     async fetch() {
       const res = await this.$http.get("rest/categories");
       // const res = await this.$http.get("categories");
       this.items = res.data;
+      this.parentList = res.data
     },
     remove(row) {
       this.$confirm(`是否确定要删除分类 "${row.name}"`, "提示", {

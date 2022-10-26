@@ -104,7 +104,34 @@ module.exports = app => {
     }, app.get('secret'))
     res.send({token})
   })
-
+  // 查询上级分类为固定值的资源列表
+  app.get('/admin/api/findListByParent/:id', authMiddleware(), async (req, res) => {
+    // const parentId = req.body
+    const Model = require(`../../models/Category`)
+    const queryOptions = {}
+    // const temp = req.body
+    if (Model.modelName === 'Category') {
+      queryOptions.populate = 'parent'
+    }
+    console.log('params', req.params)
+    // 查没有parent的 就parent: null
+    // let items = [];
+    // if(req.params.id !== 'all'){
+    //   items = await Model.find({ parent: req.params.id }).setOptions(queryOptions).limit(20)
+    // } else {
+    //   let list = await Model.find().setOptions(queryOptions).limit(20)
+    //   let result = []
+    //   let resultIds = []
+    //   list.forEach(item=>{
+    //     if(item.parent) {
+    //       result.indexOf(item.parent._id) > -1 ? '' : resultIds.push(item.parent._id) && result.push({name: item.parent.name, _id: item.parent._id})
+    //     }
+    //   })
+    //   items = result
+    // }
+    const items = await Model.find({ parent: req.params.id === 'all' ? undefined : req.params.id }).setOptions(queryOptions).limit(20)  // 关联查询parent
+    res.send(items)
+  })
   // 错误处理函数
   app.use(async (err,req,res,next)=>{
     res.status(err.statusCode || 500).send({
