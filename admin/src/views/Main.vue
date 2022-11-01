@@ -19,11 +19,11 @@
             <el-menu-item index="/heroes/create">新建英雄</el-menu-item>
             <el-menu-item index="/heroes/list">英雄列表</el-menu-item>
           </el-menu-item-group> -->
-          <!-- <el-menu-item-group>
+          <el-menu-item-group>
             <template slot="title">客户</template>
             <el-menu-item index="/customers/create">新建客户</el-menu-item>
             <el-menu-item index="/customers/list">客户列表</el-menu-item>
-          </el-menu-item-group> -->
+          </el-menu-item-group>
         </el-submenu>
         <el-submenu index="2">
           <template slot="title"><i class="el-icon-message"></i>系统设置</template>

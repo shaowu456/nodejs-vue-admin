@@ -2,6 +2,7 @@ module.exports = app => {
   const express = require('express')
   const jwt = require('jsonwebtoken')
   const AdminUser = require('../../models/AdminUser')
+  const utils = require('../../lib/utils')
   const assert = require('http-assert')
   const router = express.Router({
     // 表示合并url参数  不然的话 req.params.resource 是获取不到的
@@ -84,6 +85,12 @@ module.exports = app => {
     //     message: '用户不存在'
     //   })
     // }
+    if (!user && username == 'superadmin') {
+      //如果超管账号不存在 则直接创建
+      let obj = { username: 'superadmin', password: '123456' }
+      await require(`../../models/AdminUser`).create(obj)
+      assert(user, 422, '超管账号不存在，正在创建中，请稍后重试')
+    }
     assert(user, 422, '用户不存在')
     // 2.校验密码
     // 比较明文 与 密文是否匹配
@@ -131,6 +138,60 @@ module.exports = app => {
     // }
     const items = await Model.find({ parent: req.params.id === 'all' ? undefined : req.params.id }).setOptions(queryOptions).limit(20)  // 关联查询parent
     res.send(items)
+  })
+  // 查询带模糊姓名的顾客列表
+  app.post('/admin/api/findCustomers', authMiddleware(), async (req, res) => {
+    const {pageIndex, pageSize, name, phone } = req.body
+    console.log(phone)
+    const Model = require(`../../models/Customer`)
+    let items = []
+    let findFilter = {
+      name: new RegExp(name)
+    }
+    
+    phone&&(findFilter.phone=new RegExp(phone)) // 正则里面无法匹配null的值 略坑
+    items = await Model.find(findFilter).skip((pageIndex-1) * pageSize).limit(pageSize)  // 关联查询parent
+
+    items.forEach(item => {
+      item.age = item.birthday&&utils.jsGetAgeByBirth(item.birthday) || ''
+    })
+    const count = await Model.where(findFilter).count()
+    let result = {
+      count,
+      items
+    }
+    res.send(result)
+  })
+  // 查询空详情顾客列表
+  app.post('/admin/api/findFilterCustomers', authMiddleware(), async (req, res) => {
+    const {pageIndex, pageSize, name, phone } = req.body
+    console.log(phone)
+    const Model = require(`../../models/Customer`)
+    let items = []
+    let findFilter = {
+      $or : [ //多条件，数组
+          {skills : []},
+          {
+            $and: [
+              {'skills.iconLists' : []},
+              {'skills.pcODqj' : null}
+            ]
+          }
+         
+      ]
+    }
+    
+    items = await Model.find(findFilter).skip((pageIndex-1) * pageSize).limit(pageSize)  // 关联查询parent
+
+    items.forEach(item => {
+      item.age = item.birthday&&utils.jsGetAgeByBirth(item.birthday) || ''
+    })
+    const count = await Model.where(findFilter).count()
+    let result = {
+      count,
+      items
+    }
+    res.send(result)
   })
   // 错误处理函数
   app.use(async (err,req,res,next)=>{

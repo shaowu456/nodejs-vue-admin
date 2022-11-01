@@ -26,6 +26,10 @@ const routes = [
       { path: '/items/edit/:id', component: () => import('../views/item/ItemEdit.vue'), props: true },
       { path: '/items/list', component: () => import('../views/item/ItemList.vue') },
       
+      { path: '/customers/create', component: () => import('../views/custom/CustomerEdit.vue') },
+      { path: '/customers/edit/:id', component: () => import('../views/custom/CustomerEdit.vue'), props: true },
+      { path: '/customers/list', component: () => import('../views/custom/CustomerList.vue') },
+
       { path: '/admin_users/create', component: () => import('../views/admin_user/AdminUserEdit.vue') },
       { path: '/admin_users/edit/:id', component: () => import('../views/admin_user/AdminUserEdit.vue'), props: true },
       { path: '/admin_users/list', component: () => import('../views/admin_user/AdminUserList.vue') },
