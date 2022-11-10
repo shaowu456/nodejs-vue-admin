@@ -106,10 +106,10 @@ module.exports = app => {
     // 该方法可以生成一个token，一般用户要可以从token里拿到用户信息，这里将用户信息散列后 发过去
     // 第一个参数是要加密进去的信息，第二个参数是加密的规则 app.get如果只有一个参数就是获取　express配置，多个就是表示路由
     const token = jwt.sign({
-      id: user.id,
+      id: user._id,
       // username: user.username
     }, app.get('secret'))
-    res.send({token})
+    res.send(Object.assign({}, { token }, user))
   })
   // 查询上级分类为固定值的资源列表
   app.get('/admin/api/findListByParent/:id', authMiddleware(), async (req, res) => {

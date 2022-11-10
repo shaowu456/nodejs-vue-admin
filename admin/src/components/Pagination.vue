@@ -22,7 +22,7 @@ export default {
       type: [String, Number],
       default: 60
     },
-    querList: {
+    queryList: {
       type: Function
     }
   },
@@ -37,11 +37,11 @@ export default {
       this.currentPage = 1
       this.pagesize = val
       console.log(`每页 ${val} 条`)
-      this.querList()
+      this.queryList()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.querList()
+      this.queryList()
       console.log(`当前页: ${val}`)
     }
   }

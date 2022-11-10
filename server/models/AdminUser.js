@@ -12,7 +12,8 @@ const schema = new mongoose.Schema({
       // 数字越大越复杂
       return require('bcrypt').hashSync(val, 10)
     }
-  }
+  },
+  address: { type: String }
 })
 
 //模型导出

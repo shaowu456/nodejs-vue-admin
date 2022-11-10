@@ -63,7 +63,7 @@
       </el-table-column>
     </el-table>
     <el-row>
-      <My-Pagination :querList="fetch"
+      <My-Pagination :queryList="fetch"
                      ref="paginations"
                      :total="datatotal"
                      style="float:right"></My-Pagination>

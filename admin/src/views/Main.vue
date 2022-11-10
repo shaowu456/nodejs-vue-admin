@@ -27,7 +27,7 @@
         </el-submenu>
         <el-submenu index="2">
           <template slot="title"><i class="el-icon-message"></i>系统设置</template>
-          <el-menu-item-group v-if="!adminShow">
+          <el-menu-item-group v-if="adminShow">
             <template slot="title">管理员</template>
             <el-menu-item index="/admin_users/create">新建管理员</el-menu-item>
             <el-menu-item index="/admin_users/list">管理员列表</el-menu-item>
@@ -80,12 +80,13 @@
     ...mapGetters(['logininfo'])
     },
     mounted(){
-      // this.username = this.logininfo._doc.address
-      // if(this.logininfo._doc.username === 'superadmin'){
-      //   this.adminShow = true
-      // }else{
-      //   this.adminShow = false
-      // }
+      console.log('~~',this.logininfo)
+      this.username = this.logininfo._doc.address
+      if(this.logininfo._doc.username === 'superadmin'){
+        this.adminShow = true
+      }else{
+        this.adminShow = false
+      }
     },
     methods: {
       leave(){

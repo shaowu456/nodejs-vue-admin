@@ -4,7 +4,7 @@ const state = {
   avatar: '',
   introduction: '',
   roles: ['admin'],
-  logininfo: '',
+  logininfo: '33',
   userinfo: {}, // 登录的基本信息
   locationId: '', // 当前选择的仓库Id
   routerName: [],
@@ -29,6 +29,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       login(data)
         .then(res => {
+          console.log('~~~login', res)
           let logininfo = res.data
           commit('SET_LOGININFO', logininfo) // 存储登录信息
           let username = logininfo._doc.username
