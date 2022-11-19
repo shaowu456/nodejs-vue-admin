@@ -1,3 +1,3 @@
 exports.globalConfig = {
-  env: 'http://localhost:3000/'
+  env: 'http://1.13.19.118/'
 }
