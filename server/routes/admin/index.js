@@ -68,7 +68,7 @@ module.exports = app => {
   app.post('/admin/api/upload', authMiddleware(), upload.single('file'), async(req, res)=>{
     // express 虽然能接收到这个请求，但是本身获取不到上传文件的数据，需要一个中间件，multer 这个中间件会 把文件数据 赋值给 req.file
     const file = req.file
-    let { globalConfig } = require('../../env.config')
+    let { globalConfig } = require('../../server.env.config')
     // file.url = `http://localhost:3000/uploads/${file.filename}`
     file.url = `${globalConfig.env}uploads/${file.filename}`
     res.send(file)

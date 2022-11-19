@@ -23,7 +23,7 @@ http.interceptors.response.use(res => {
 }, err => {
   // 这里可以跟服务端约定 message 里返回报错具体信息
   if (err.response.data.message) {
-    console.log(err.response)
+    // console.log(err.response)
     Vue.prototype.$message({
       type: 'error',
       message: err.response.data.message
