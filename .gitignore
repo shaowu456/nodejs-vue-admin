@@ -1,6 +1,10 @@
 .DS_Store
 node_modules
+uploads
 /dist
+
+# 服务端环境配置文件
+*.env.config.js
 
 # local env files
 .env.local

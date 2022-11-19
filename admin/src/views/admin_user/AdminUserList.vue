@@ -1,13 +1,13 @@
 <template>
   <div>
     <h1>管理员列表</h1>
-    <el-form label-position="right" inline>
+    <!-- <el-form label-position="right" inline>
       <el-row>
         <el-button size="medium" class="goodsbtnbox" @click="query" type="primary">查询</el-button>
         <el-button size="medium" class="goodsbtnbox" @click="resetQuery">重置</el-button>
         <el-button size="medium" class="goodsbtnbox" @click="create">新建</el-button>
       </el-row>
-    </el-form>
+    </el-form> -->
     <el-table :data="items">
       <el-table-column prop="_id" label="ID" width="240"></el-table-column>
       <el-table-column prop="username" label="账号"></el-table-column>
