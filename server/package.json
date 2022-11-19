@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "express": "^5.0.0-beta.1",
     "http-assert": "^1.5.0",
+    "images": "^3.2.4",
     "inflection": "^1.13.4",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.6.5",
