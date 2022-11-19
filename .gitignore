@@ -4,7 +4,7 @@ uploads
 /dist
 
 # local env files
-*.env.config.js
+# *.env.config.js
 .env.local
 .env.*.local
 
