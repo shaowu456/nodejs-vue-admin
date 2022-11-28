@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>库存管理</h1>
-    <el-form label-position="right" inline>
+    <el-form label-position="right" inline class="search-header">
       <el-row>
         <el-button size="medium" class="goodsbtnbox" @click="query" type="primary">查询</el-button>
         <el-button size="medium" class="goodsbtnbox" @click="resetQuery">重置</el-button>
@@ -82,4 +82,8 @@ export default {
   }
 };
 </script>
-
+<style lang="scss" scoped>
+.search-header{
+  margin-bottom: 16px;
+}
+</style>
