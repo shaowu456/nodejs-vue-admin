@@ -44,7 +44,7 @@ module.exports = app => {
     }
     // req.body 要想使用的话，要加上中间件 express.json()
     // const items = await Category.find().populate('parent').limit(10)
-    const items = await req.Model.find().setOptions(queryOptions).limit(10)
+    const items = await req.Model.find().setOptions(queryOptions).limit(999)
     res.send(items)
   })
   // 获取某个分类的详情
@@ -143,7 +143,7 @@ module.exports = app => {
     //   })
     //   items = result
     // }
-    const items = await Model.find({ parent: req.params.id === 'all' ? undefined : req.params.id }).setOptions(queryOptions).limit(20)  // 关联查询parent
+    const items = await Model.find({ parent: req.params.id === 'all' ? undefined : req.params.id }).setOptions(queryOptions).limit(999)  // 关联查询parent
     res.send(items)
   })
   // 查询带模糊姓名的顾客列表
