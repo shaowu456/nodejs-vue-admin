@@ -11,7 +11,7 @@
     </el-form>
     <div class="content-box">
       <div class="left-pane">
-        <el-tree :data="data" node-key="id" default-expand-all :expand-on-click-node="false">
+        <el-tree :highlight-current="true" current-node-key="all" @node-click="nodeClick" :data="data" node-key="id" default-expand-all :expand-on-click-node="false">
           <span class="custom-tree-node" slot-scope="{ node }">
           <!-- <span class="custom-tree-node" slot-scope="{ node }"> -->
             <span>{{ node.label }}</span>
@@ -24,7 +24,7 @@
         </el-tree>
       </div>
       <div class="right-pane">
-        <el-table border stripe :data="goods">
+        <el-table border stripe size="mini" :data="goods">
           <!-- <el-table-column prop="_id" label="ID" width="240"></el-table-column> -->
           <el-table-column prop="class.name" label="类别"></el-table-column>
           <el-table-column prop="name" label="商品名称"></el-table-column>
@@ -71,7 +71,7 @@ export default {
     return {
       data: [
         {
-          id: 1,
+          id: 'all',
           label: "所有类别",
           children: [
             {
@@ -111,6 +111,12 @@ export default {
     this.fetch();
   },
   methods: {
+    async nodeClick(value,node,tree) {
+      console.log(value,node,tree)
+      const res = await this.$http.get(`/findGoodsByClass/${value.id}`);
+      console.log("goodsClass~~", res);
+      this.goods = res.data;
+    },
     async importXlsx() {
       let classMap = {
         '镜架': '6383798545a8074c1216aa1a',
