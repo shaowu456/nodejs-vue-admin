@@ -33,7 +33,8 @@ const routes = [
       { path: '/goods/list', component: () => import('../views/goods/GoodsList.vue') },
       { path: '/goods/create', component: () => import('../views/goods/GoodsEdit.vue') },
       { path: '/goods/edit/:id', component: () => import('../views/goods/GoodsEdit.vue'), props: true },
-
+      { path: '/goods/output', component: () => import('../views/goods/Output.vue') },
+      
       { path: '/admin_users/create', component: () => import('../views/admin_user/AdminUserEdit.vue') },
       { path: '/admin_users/edit/:id', component: () => import('../views/admin_user/AdminUserEdit.vue'), props: true },
       { path: '/admin_users/list', component: () => import('../views/admin_user/AdminUserList.vue') },

@@ -26,6 +26,11 @@
       <div class="right-pane">
         <el-table border stripe size="mini" :data="goods">
           <!-- <el-table-column prop="_id" label="ID" width="240"></el-table-column> -->
+          <el-table-column label="编号">
+            <template slot-scope="scop">
+              {{scop.$index+1}}
+            </template>
+          </el-table-column>
           <el-table-column prop="class.name" label="类别"></el-table-column>
           <el-table-column prop="name" label="商品名称"></el-table-column>
           <el-table-column prop="nameCode" label="助记码"></el-table-column>

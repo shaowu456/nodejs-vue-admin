@@ -28,7 +28,7 @@
             <template slot="title">商品</template>
             <el-menu-item index="/goods/create">新建商品</el-menu-item>
             <el-menu-item index="/goods/list">库存管理</el-menu-item>
-            <el-menu-item index="/customers/list">出库管理</el-menu-item>
+            <el-menu-item index="/goods/output">出库管理</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="2">
