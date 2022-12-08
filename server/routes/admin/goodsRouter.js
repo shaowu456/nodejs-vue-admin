@@ -51,11 +51,14 @@
     res.send(items)
   })
   //  出库操作
-  app.post('/admin/api/findOutputsaaaa/', authMiddleware(), async (req, res) => {
-    const model = await req.Model.create(req.body)
+  app.post('/admin/api/output/', authMiddleware(), async (req, res) => {
+    const Model = require(`../../models/Output`)
+    const createResult = await Model.create(req.body)
     console.log('~~~~~~~~~~~~~~~~~~~~')
     console.log(req.body)
-    res.send(model)
+    const goodsModel = require(`../../models/Good`)
+    const updateResult = await goodsModel.findByIdAndUpdate(req.body.refGood, { count: 3 })
+    res.send({createResult,updateResult})
   })
   
  }

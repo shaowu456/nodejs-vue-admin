@@ -3,6 +3,7 @@
     <el-form label-position="right" inline style="margin-bottom:16px">
       <el-row>
         <el-button size="medium" class="goodsbtnbox" @click="openDialog" type="primary">出库</el-button>
+        <el-button size="medium" class="goodsbtnbox" @click="fetch">刷新</el-button>
       </el-row>
     </el-form>
     <el-table border stripe :data="items">
@@ -16,7 +17,11 @@
       <!-- <el-table-column prop="phone" label="单价" min-width="60"></el-table-column> -->
       <el-table-column prop="num" label="数量" min-width="30"></el-table-column>
       <el-table-column prop="price" label="金额" min-width="50"></el-table-column>
-      <el-table-column prop="time" label="出库时间" min-width="50"></el-table-column>
+      <el-table-column prop="time" label="出库时间" min-width="50">
+        <template slot-scope="scop">
+          {{formatTime(scop.row.time)}}
+        </template>
+      </el-table-column>
       <el-table-column prop="refGood.count" label="库存" min-width="50"></el-table-column>
       <el-table-column prop="source" label="来源" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="_id" label="单号" min-width="100" show-overflow-tooltip></el-table-column>
@@ -61,6 +66,9 @@ export default {
       this.items = res.data;
       // this.datatotal = res.data.count;
     },
+    formatTime(val) {
+      return dayjs(val).format('YYYY-MM-DD HH:mm:ss'); 
+    }
   },
   mounted() {
     this.fetch();
