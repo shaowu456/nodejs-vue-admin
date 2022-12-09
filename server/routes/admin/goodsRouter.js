@@ -56,8 +56,9 @@
     const createResult = await Model.create(req.body)
     console.log('~~~~~~~~~~~~~~~~~~~~')
     console.log(req.body)
+    let { leftCount, num } = req.body
     const goodsModel = require(`../../models/Good`)
-    const updateResult = await goodsModel.findByIdAndUpdate(req.body.refGood, { count: 3 })
+    const updateResult = await goodsModel.findByIdAndUpdate(req.body.refGood, { count: leftCount-num })
     res.send({createResult,updateResult})
   })
   

@@ -1,20 +1,20 @@
 <template>
-  <el-dialog title="出库商品" :visible.sync="visible" width="500px" class="output-dialog">
-    <el-form :model="form">
-      <el-form-item label="商品名称" :label-width="formLabelWidth">
+  <el-dialog :close-on-click-modal="false" title="出库商品" :visible.sync="visible" width="500px" class="output-dialog">
+    <el-form :model="form" :rules="rules" ref="form">
+      <el-form-item label="商品名称" :label-width="formLabelWidth" prop="refGood">
         <!-- <el-input v-model="form.name" placeholder="请输入助记码" autocomplete=" 吧off"></el-input> -->
-        <el-select v-model="form.refGood" filterable :filter-method="filterMethod">
+        <el-select v-model="form.refGood" @change="changeGood" filterable :filter-method="filterMethod">
           <el-option v-for="item in goods" :key="item._id" :label="item.name" :value="item._id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="数量" :label-width="formLabelWidth">
-        <el-input-number v-model="form.num" controls-position="right" :max="9999"></el-input-number>
+        <el-input-number v-model="form.num" controls-position="right" :step="1" step-strictly :min="1" :max="9999"></el-input-number>
       </el-form-item>
       <el-form-item label="剩余库存" :label-width="formLabelWidth">
-        35
+        {{ form.leftCount }}
       </el-form-item>
-      <el-form-item label="金额（元）" :label-width="formLabelWidth">
-        <el-input v-model="form.price" autocomplete=" 吧off"></el-input>
+      <el-form-item label="金额（元）" :label-width="formLabelWidth" prop="price">
+        <el-input @keyup.enter.native="confirm()" v-model="form.price" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -34,17 +34,31 @@ export default {
       formLabelWidth: '120px',
       form: {
         refGood: "",
-        num: "",
+        num: 1,
+        leftCount: 0,
         price: "",
       },
       datatotal: 0,
       items: [],
-      goods: []
+      goods: [],
+      rules: {
+        refGood: [
+          { required: true, message: '请选择商品', trigger: 'change' },
+        ],
+        price: [
+          { required: true, message: '请输入金额（元）', trigger: 'blur' }
+        ],
+      }
     };
   },
   computed: {
     ...mapGetters(['logininfo'])
-    },
+  },
+  watch: {
+    visible(val) {
+      !val && this.$refs['form'].resetFields();
+    }
+  },
   methods: {
     open() {
       this.visible = true;
@@ -56,17 +70,30 @@ export default {
       // const res = await this.$http.get("rest/goods");
       this.goods = res;
     },
+    changeGood(val) {
+      let item = this.goods.find(item=>item._id===val)
+      console.log('~~~',item)
+      this.form.leftCount = item.count
+    },
     async confirm(){
-      this.form.time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-      this.form.source = this.logininfo._doc.address;
-      await this.$http.post('rest/outputs', this.form)
-      // this.$router.push('/goods/output')
-      this.$message({
-        type: 'success',
-        message: '出库成功'
-      })
-      this.$emit('outputSuccess','')
-      this.visible = false
+      this.$refs['form'].validate(async (valid) => {
+        if (valid) {
+          this.form.time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+          this.form.source = this.logininfo._doc.address;
+          // await this.$http.post('rest/outputs', this.form)
+          await this.$http.post('output', this.form)
+          // this.$router.push('/goods/output')
+          this.$message({
+            type: 'success',
+            message: '出库成功'
+          })
+          this.$emit('outputSuccess','')
+          this.visible = false
+        } else {
+          return false;
+        }
+      });
+
     }
   },
   async mounted() {

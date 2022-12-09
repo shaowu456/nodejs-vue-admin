@@ -1,17 +1,18 @@
 <template>
   <div>
-    <h1>库存管理</h1>
     <el-form label-position="right" inline class="search-header">
       <el-row>
-        <el-button size="medium" class="goodsbtnbox" @click="query" type="primary">查询</el-button>
+        <!-- <el-button size="medium" class="goodsbtnbox" @click="query" type="primary">查询</el-button> -->
+        <el-button size="medium" class="goodsbtnbox" @click="createClass" type="primary">新建分类</el-button>
+        <el-button size="medium" class="goodsbtnbox" @click="createGood" type="primary">新建商品</el-button>
         <el-button size="medium" class="goodsbtnbox" @click="resetQuery">重置</el-button>
-        <el-button size="medium" class="goodsbtnbox" @click="importXlsx">导入</el-button>
+        <!-- <el-button size="medium" class="goodsbtnbox" @click="importXlsx">导入</el-button> -->
         <!-- <el-button size="medium" class="goodsbtnbox" @click="create">新建</el-button> -->
       </el-row>
     </el-form>
     <div class="content-box">
       <div class="left-pane">
-        <el-tree :highlight-current="true" current-node-key="all" @node-click="nodeClick" :data="data" node-key="id" default-expand-all :expand-on-click-node="false">
+        <el-tree ref="tree" :highlight-current="true" current-node-key="all" @node-click="nodeClick" :data="data" node-key="id" default-expand-all :expand-on-click-node="false">
           <span class="custom-tree-node" slot-scope="{ node }">
           <!-- <span class="custom-tree-node" slot-scope="{ node }"> -->
             <span>{{ node.label }}</span>
@@ -53,26 +54,6 @@
 <script>
 export default {
   data() {
-    // const data = [
-    //   {
-    //     id: 1,
-    //     label: "所有类别",
-    //     children: [
-    //       {
-    //         id: 4,
-    //         label: "一级 1-1"
-    //       },
-    //       {
-    //         id: 5,
-    //         label: "二级 1-1"
-    //       },
-    //       {
-    //         id: 6,
-    //         label: "三级 1-1"
-    //       },
-    //     ],
-    //   }
-    // ];
     return {
       data: [
         {
@@ -116,6 +97,12 @@ export default {
     this.fetch();
   },
   methods: {
+    createClass() {
+
+    },
+    createGood() {
+      this.$router.push('/goods/create')
+    },
     async nodeClick(value,node,tree) {
       console.log(value,node,tree)
       const res = await this.$http.get(`/findGoodsByClass/${value.id}`);
@@ -163,6 +150,7 @@ export default {
       this.parentList = res.data;
     },
     resetQuery() {
+      this.$refs.tree.setCurrentKey('all')
       this.fetch();
     },
     async fetch() {
@@ -198,6 +186,7 @@ export default {
   .left-pane {
     min-width: 240px;
     margin-right: 16px;
+    height: 500px;
     border: 1px solid #e4e4e4;
   }
   .right-pane{

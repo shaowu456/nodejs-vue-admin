@@ -3,8 +3,8 @@
     <el-form label-position="right" inline style="margin-bottom:16px">
       <el-row>
         <el-button size="medium" class="goodsbtnbox" @click="openDialog" type="primary">出库</el-button>
-        <el-button style="margin-right:16px" size="medium" class="goodsbtnbox" @click="fetch">刷新</el-button>
-        <el-select v-model="time" placeholder="请选择" @change="timeChange">
+        <el-button style="margin-right:16px" size="medium" class="goodsbtnbox" @click="initTable">刷新</el-button>
+        <el-select style="margin-right:16px;" v-model="time" placeholder="请选择" @change="timeChange">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -12,29 +12,34 @@
             :value="item.value">
           </el-option>
         </el-select>
+        <span style="color:#606266;font-size: 13px;">{{startTime}} 至 {{endTime}}</span>
+        <div class="sum-label">
+          <span style="margin-right:16px">数量：{{sum.num}}</span>
+          <span>金额：{{sum.price}}</span>
+        </div>
       </el-row>
     </el-form>
-    <el-table border stripe :data="items">
+    <el-table border stripe :data="items" :default-sort="{prop: 'time', order: 'descending'}">
       <!-- <el-table-column prop="_id" label="ID" width="240"></el-table-column> -->
-      <el-table-column label="序号">
+      <el-table-column min-width="20" label="序号">
         <template slot-scope="scop">
           {{scop.$index+1}}
         </template>
       </el-table-column>
-      <el-table-column prop="refGood.name" label="商品名称" min-width="50"></el-table-column>
+      <el-table-column prop="refGood.name" sortable label="商品名称" min-width="50"></el-table-column>
       <!-- <el-table-column prop="phone" label="单价" min-width="60"></el-table-column> -->
-      <el-table-column prop="num" label="数量" min-width="30"></el-table-column>
-      <el-table-column prop="price" label="金额" min-width="50"></el-table-column>
-      <el-table-column prop="time" label="出库时间" min-width="50">
+      <el-table-column prop="num" sortable label="数量" min-width="30"></el-table-column>
+      <el-table-column prop="price" sortable label="金额" min-width="50"></el-table-column>
+      <el-table-column prop="time" sortable label="出库时间" min-width="100">
         <template slot-scope="scop">
           {{formatTime(scop.row.time)}}
         </template>
       </el-table-column>
-      <el-table-column prop="refGood.count" label="库存" min-width="50"></el-table-column>
-      <el-table-column prop="source" label="来源" min-width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="_id" label="单号" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="refGood.count" sortable label="库存" min-width="50"></el-table-column>
+      <el-table-column prop="source" sortable label="来源" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="_id" label="单号" min-width="120" show-overflow-tooltip></el-table-column>
     </el-table>
-    <output-dialog ref="output-dialog" @outputSuccess="fetch"></output-dialog>
+    <output-dialog ref="output-dialog" @outputSuccess="initTable"></output-dialog>
   </div>
 </template>
 
@@ -82,39 +87,56 @@ export default {
         //   label: '全部',
         //   value: 'all'
         // }
-      ]
+      ],
+      startTime: '',
+      endTime: '',
+      sum: {
+        num: 0,
+        price: 0
+      }
     };
   },
   methods: {
     timeChange(val) {
       this.fetch(timeEnum[val]);
     },
-    async query() {
-      this.fetch();
+    initTable() {
+      this.time = 'today';
+      this.fetch(timeEnum['today']);
     },
     openDialog() {
       this.$refs['output-dialog'].open();
     },
     async fetch([startTime, endTime]) {
-      // const res = await this.$http.get("rest/customers");
-      // const classParam = { $and: [{ createdAt: { $gt: new Date('2022-12-04 23:59:39').getTime() } }, { createdAt: { $lt: new Date('2022-12-05 23:40:39').getTime() } }] }
-      console.log(dayjs(startTime).format('YYYY-MM-DD HH:mm:ss'), dayjs(endTime).format('YYYY-MM-DD HH:mm:ss'))
+      this.startTime = dayjs(startTime).format('YYYY-MM-DD HH:mm:ss');
+      this.endTime = dayjs(endTime).format('YYYY-MM-DD HH:mm:ss');
       const res = await this.$http.post(`findOutputs`, {
-        // startTime: new Date(dayjs().format('YYYY-MM-DD') + ' 00:00:00').getTime(),
-        // endTime: new Date(dayjs().format('YYYY-MM-DD') + ' 23:59:59').getTime(),
         startTime,
         endTime,
       });
       this.items = res.data;
-      // this.datatotal = res.data.count;
+      this.sum.num = this.items.reduce((pre,cur)=>{
+        return Number(cur.num) + pre
+      },0)
+      this.sum.price = this.items.reduce((pre,cur)=>{
+        return Number(cur.price) + pre
+      },0)
     },
     formatTime(val) {
       return dayjs(val).format('YYYY-MM-DD HH:mm:ss'); 
     }
   },
   mounted() {
-    this.fetch(timeEnum['today']);
+    this.initTable()
   },
 };
 </script>
+<style lang="scss">
+.sum-label {
+  float: right;
+  color:#606266;
+  font-size: 14px;
+  line-height: 40px;
+}
+</style>
 
