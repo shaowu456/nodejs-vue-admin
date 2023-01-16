@@ -31,9 +31,10 @@
     const Model = require(`../../models/Good`)
     const queryOptions = {}
     queryOptions.populate = 'class'
-    console.log('params', req.params)
     // $options:"$i" 不区分大小写
-    const classParam = {nameCode: {$regex: req.params.id, $options:"$i"}}
+    // const classParam = {nameCode: {$regex: req.params.id, $options:"$i"}}
+    const classParam = {nameCode: new RegExp(req.params.id, 'i') }
+    console.log('params', req.params, classParam)
     const items = await Model.find(classParam).setOptions(queryOptions)  // 关联查询parent
     res.send(items)
   })
