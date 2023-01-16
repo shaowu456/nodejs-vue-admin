@@ -4,6 +4,16 @@
       <el-row>
         <el-button size="medium" class="goodsbtnbox" @click="openDialog" type="primary">出库</el-button>
         <el-button style="margin-right:16px" size="medium" class="goodsbtnbox" @click="initTable">刷新</el-button>
+        <span style="color:#606266;font-size: 13px;">来源：</span>
+        <el-select style="margin-right:16px;" v-model="source" placeholder="请选择" @change="sourceChange">
+          <el-option
+            v-for="item in sources"
+            :key="item.username"
+            :label="item.address"
+            :value="item.address">
+          </el-option>
+        </el-select>
+        <span style="color:#606266;font-size: 13px;">时间：</span>
         <el-select style="margin-right:16px;" v-model="time" placeholder="请选择" @change="timeChange">
           <el-option
             v-for="item in options"
@@ -26,16 +36,16 @@
           {{scop.$index+1}}
         </template>
       </el-table-column>
-      <el-table-column prop="refGood.name" sortable label="商品名称" min-width="50"></el-table-column>
+      <el-table-column prop="name" sortable label="商品名称" min-width="50"></el-table-column>
       <!-- <el-table-column prop="phone" label="单价" min-width="60"></el-table-column> -->
       <el-table-column prop="num" sortable label="数量" min-width="30"></el-table-column>
-      <el-table-column prop="price" sortable label="金额" min-width="50"></el-table-column>
+      <el-table-column prop="price" sortable label="合计金额" min-width="50"></el-table-column>
       <el-table-column prop="time" sortable label="出库时间" min-width="100">
         <template slot-scope="scop">
           {{formatTime(scop.row.time)}}
         </template>
       </el-table-column>
-      <el-table-column prop="refGood.count" sortable label="库存" min-width="50"></el-table-column>
+      <el-table-column prop="leftCount" sortable label="剩余库存" min-width="50"></el-table-column>
       <el-table-column prop="source" sortable label="来源" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="_id" label="单号" min-width="120" show-overflow-tooltip></el-table-column>
     </el-table>
@@ -88,6 +98,8 @@ export default {
         //   value: 'all'
         // }
       ],
+      source: '全部',
+      sources: [{username:'hsw', address:'xxxx'}],
       startTime: '',
       endTime: '',
       sum: {
@@ -100,6 +112,9 @@ export default {
     timeChange(val) {
       this.fetch(timeEnum[val]);
     },
+    sourceChange() {
+      this.fetch(timeEnum[this.time]);
+    },
     initTable() {
       this.time = 'today';
       this.fetch(timeEnum['today']);
@@ -111,6 +126,7 @@ export default {
       this.startTime = dayjs(startTime).format('YYYY-MM-DD HH:mm:ss');
       this.endTime = dayjs(endTime).format('YYYY-MM-DD HH:mm:ss');
       const res = await this.$http.post(`findOutputs`, {
+        source: this.source,
         startTime,
         endTime,
       });
@@ -126,8 +142,11 @@ export default {
       return dayjs(val).format('YYYY-MM-DD HH:mm:ss'); 
     }
   },
-  mounted() {
+  async mounted () {
     this.initTable()
+    this.sources = [{username:'all', address:'全部'}].concat((await this.$http.get("rest/admin_users")).data);
+    // const res = await this.$http.get("admin_users");
+    // this.items = res.data;
   },
 };
 </script>

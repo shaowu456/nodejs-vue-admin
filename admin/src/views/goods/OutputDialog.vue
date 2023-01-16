@@ -34,6 +34,7 @@ export default {
       formLabelWidth: '120px',
       form: {
         refGood: "",
+        name: '',
         num: 1,
         leftCount: 0,
         price: "",
@@ -73,6 +74,7 @@ export default {
     changeGood(val) {
       let item = this.goods.find(item=>item._id===val)
       console.log('~~~',item)
+      this.form.name = item.name
       this.form.leftCount = item.count
     },
     async confirm(){

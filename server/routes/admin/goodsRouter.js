@@ -40,23 +40,26 @@
   
   //  查询出库列表
   app.post('/admin/api/findOutputs/', authMiddleware(), async (req, res) => {
-    const { startTime, endTime } = req.body
+    const { startTime, endTime, source } = req.body
     const Model = require(`../../models/Output`)
     const queryOptions = {}
     queryOptions.populate = 'refGood'
     console.log('start, end', startTime, endTime)
     // const classParam = { $and: [{ createdAt: { $gt: startTime } }, { createdAt: { $lt: endTime } }] }
-    const classParam = { $and: [{ time: { $gt: startTime } }, { time: { $lt: endTime } }] }
+    let timeParam = [{ time: { $gt: startTime } }, { time: { $lt: endTime } }]
+    const classParam = source === '全部' ? { $and: timeParam } : { $and: timeParam.concat({ source }) }
+    // const classParam = { $and: [{ time: { $gt: startTime } }, { time: { $lt: endTime } }] }
     const items = await Model.find(classParam).setOptions(queryOptions)  // 关联查询parent
     res.send(items)
   })
   //  出库操作
   app.post('/admin/api/output/', authMiddleware(), async (req, res) => {
     const Model = require(`../../models/Output`)
+    let { leftCount, num } = req.body
+    req.body.leftCount = leftCount-num
     const createResult = await Model.create(req.body)
     console.log('~~~~~~~~~~~~~~~~~~~~')
     console.log(req.body)
-    let { leftCount, num } = req.body
     const goodsModel = require(`../../models/Good`)
     const updateResult = await goodsModel.findByIdAndUpdate(req.body.refGood, { count: leftCount-num })
     res.send({createResult,updateResult})
