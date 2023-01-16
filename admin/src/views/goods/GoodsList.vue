@@ -8,6 +8,15 @@
         <el-button size="medium" class="goodsbtnbox" @click="resetQuery">重置</el-button>
         <!-- <el-button size="medium" class="goodsbtnbox" @click="importXlsx">导入</el-button> -->
         <!-- <el-button size="medium" class="goodsbtnbox" @click="create">新建</el-button> -->
+        <span style="color:#606266;font-size: 13px;margin-left: 16px;">来源：</span>
+        <el-select v-model="source"  @change="fetch()">
+          <el-option
+            v-for="item in sources"
+            :key="item.username"
+            :label="item.address"
+            :value="item.address">
+          </el-option>
+        </el-select>
       </el-row>
     </el-form>
     <div class="content-box">
@@ -39,6 +48,7 @@
           <el-table-column prop="salesPrice" label="零售价"></el-table-column>
           <el-table-column prop="MembershipPrice" label="会员价"></el-table-column>
           <el-table-column prop="count" label="现有库存"></el-table-column>
+          <el-table-column prop="source" label="来源"></el-table-column>
           <el-table-column fixed="right" label="操作" width="180">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="$router.push(`/goods/edit/${scope.row._id}`)">编辑</el-button>
@@ -78,16 +88,14 @@ export default {
       goods: [],
       parent: "",
       parentList: [],
+      // 所选分类的 id
+      class: 'all', 
+      source: '全部',
+      sources: []
     };
   },
   async created() {
     const goodsClass = await this.$http.get('/findGoodsByClassLikeGlasses');
-    console.log('goodsClass~~~', goodsClass.data.map(item=>{
-      return {
-        id: item._id,
-        labe: item.name
-      }
-    }))
     this.data[0].children = goodsClass.data.map(item=>{
       return {
         id: item._id,
@@ -95,6 +103,7 @@ export default {
       }
     })
     this.fetch();
+    this.sources = [{username:'all', address:'全部'}].concat((await this.$http.get("rest/admin_users")).data);
   },
   methods: {
     createClass() {
@@ -103,11 +112,16 @@ export default {
     createGood() {
       this.$router.push('/goods/create')
     },
+    sourceChange(val) {
+      console.log(val)
+    },
     async nodeClick(value,node,tree) {
       console.log(value,node,tree)
-      const res = await this.$http.get(`/findGoodsByClass/${value.id}`);
-      console.log("goodsClass~~", res);
-      this.goods = res.data;
+      this.class = value.id;
+      // const res = await this.$http.get(`/findGoodsByClass/${value.id}`);
+      // console.log("goodsClass~~", res);
+      // this.goods = res.data;
+      this.fetch()
     },
     async importXlsx() {
       let classMap = {
@@ -154,7 +168,11 @@ export default {
       this.fetch();
     },
     async fetch() {
-      const res = await this.$http.get("rest/goods");
+      // const res = await this.$http.get("rest/goods");
+      const res = await this.$http.post(`findGoods`, {
+        source: this.source,
+        itemClass: this.class,
+      });
       this.goods = res.data;
     },
     remove(row) {

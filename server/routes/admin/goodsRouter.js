@@ -26,6 +26,21 @@
     const items = await Model.find(classParam).setOptions(queryOptions)  // 关联查询parent
     res.send(items)
   })
+  //  查询某一分类 且 某一来源的 全部商品
+  app.post('/admin/api/findGoods/', authMiddleware(), async (req, res) => {
+    const Model = require(`../../models/Good`)
+    const { itemClass, source } = req.body
+    const queryOptions = {}
+    queryOptions.populate = 'class'
+    console.log('params', req.params)
+    // const classParam = req.params.id ==='all' ? {} : {class: req.params.id}
+    let classParam = {}
+    itemClass !== 'all' &&  (classParam.class = itemClass);
+    source !== '全部' &&  (classParam.source = source)
+    console.log('~~classParam~', classParam)
+    const items = await Model.find(classParam).setOptions(queryOptions)  // 关联查询parent
+    res.send(items)
+  })
   //  通过助记码查询商品
   app.get('/admin/api/findGoodsByNamecode/:id', authMiddleware(), async (req, res) => {
     const Model = require(`../../models/Good`)

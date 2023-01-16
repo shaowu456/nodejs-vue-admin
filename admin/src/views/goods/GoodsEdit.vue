@@ -25,6 +25,16 @@
       <el-form-item label="现有库存">
         <el-input v-model="model.count"></el-input>
       </el-form-item>
+      <el-form-item label="来源">
+        <el-select v-model="model.source">
+          <el-option
+            v-for="item in sources"
+            :key="item.username"
+            :label="item.address"
+            :value="item.address">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" native-type="submit">保存</el-button>
       </el-form-item>
@@ -40,7 +50,8 @@ export default {
   data() {
     return {
       model: {},
-      parents: []
+      parents: [],
+      sources: []
     }
   },
   methods: {
@@ -77,9 +88,10 @@ export default {
       this.parents = goodsClass.data
     },
   },
-  created() {
+  async created() {
     this.fetchParents()
     this.id && this.fetch()
+    this.sources = (await this.$http.get("rest/admin_users")).data;
   }
 }
 </script>
