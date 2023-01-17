@@ -38,7 +38,7 @@ export default {
     },
     async query() {
       const res = await this.$http.get(`/findListByParent/${this.parent}`, { name: '天' });
-      this.items = res.data;
+      this.items = res.data.filter(item=>item.username!='admin');
     },
     async fetchParentLists() {
       const res = await this.$http.get(`/findListByParent/5dce1aa5a8a3823e706a98eb`);
@@ -49,8 +49,7 @@ export default {
     },
     async fetch() {
       const res = await this.$http.get("rest/admin_users");
-      // const res = await this.$http.get("admin_users");
-      this.items = res.data;
+      this.items = res.data.filter(item=>item.username!='admin');
     },
     remove(row) {
       this.$confirm(`是否确定要删除管理员 "${row.username}"`, "提示", {

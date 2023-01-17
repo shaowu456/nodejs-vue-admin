@@ -4,6 +4,7 @@ module.exports = app => {
   const AdminUser = require('../../models/AdminUser')
   const utils = require('../../lib/utils')
   const assert = require('http-assert')
+  const goodsRouter = require('./goodsRouter')
   const router = express.Router({
     // 表示合并url参数  不然的话 req.params.resource 是获取不到的
     mergeParams: true
@@ -34,12 +35,16 @@ module.exports = app => {
   router.get('/',async(req, res)=>{
     console.log(req.user)
     const queryOptions = {}
+    // let needParent = ['Category', 'Goods']
     if(req.Model.modelName === 'Category') {
       queryOptions.populate = 'parent'
     }
+    if(req.Model.modelName === 'Goods') {
+      queryOptions.populate = 'class'
+    }
     // req.body 要想使用的话，要加上中间件 express.json()
     // const items = await Category.find().populate('parent').limit(10)
-    const items = await req.Model.find().setOptions(queryOptions).limit(10)
+    const items = await req.Model.find().setOptions(queryOptions).limit(999)
     res.send(items)
   })
   // 获取某个分类的详情
@@ -138,7 +143,7 @@ module.exports = app => {
     //   })
     //   items = result
     // }
-    const items = await Model.find({ parent: req.params.id === 'all' ? undefined : req.params.id }).setOptions(queryOptions).limit(20)  // 关联查询parent
+    const items = await Model.find({ parent: req.params.id === 'all' ? undefined : req.params.id }).setOptions(queryOptions).limit(999)  // 关联查询parent
     res.send(items)
   })
   // 查询带模糊姓名的顾客列表
@@ -195,6 +200,7 @@ module.exports = app => {
     }
     res.send(result)
   })
+  goodsRouter.init(app,authMiddleware)
   // 错误处理函数
   app.use(async (err,req,res,next)=>{
     res.status(err.statusCode || 500).send({
