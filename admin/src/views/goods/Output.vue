@@ -149,10 +149,10 @@ export default {
     }
   },
   async mounted () {
-    this.initTable()
     this.source = this.logininfo._doc.address === '超级管理员'? '光明眼镜': this.logininfo._doc.address;
     this.sources = [{username:'all', address:'全部'}].concat((await this.$http.get("rest/admin_users")).data);
     this.sources = this.sources.filter(item=> !['admin', 'superadmin'].includes(item.username))
+    this.initTable()
     // this.items = res.data;
   },
 };
