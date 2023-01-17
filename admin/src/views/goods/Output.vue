@@ -4,15 +4,17 @@
       <el-row>
         <el-button size="medium" class="goodsbtnbox" @click="openDialog" type="primary">出库</el-button>
         <el-button style="margin-right:16px" size="medium" class="goodsbtnbox" @click="initTable">刷新</el-button>
-        <span style="color:#606266;font-size: 13px;">来源：</span>
-        <el-select style="margin-right:16px;" v-model="source" placeholder="请选择" @change="sourceChange">
-          <el-option
-            v-for="item in sources"
-            :key="item.username"
-            :label="item.address"
-            :value="item.address">
-          </el-option>
-        </el-select>
+        <template v-if="isSuperAdmin">
+          <span style="color:#606266;font-size: 13px;">来源：</span>
+          <el-select style="margin-right:16px;" v-model="source" placeholder="请选择" @change="sourceChange">
+            <el-option
+              v-for="item in sources"
+              :key="item.username"
+              :label="item.address"
+              :value="item.address">
+            </el-option>
+          </el-select>
+        </template>
         <span style="color:#606266;font-size: 13px;">时间：</span>
         <el-select style="margin-right:16px;" v-model="time" placeholder="请选择" @change="timeChange">
           <el-option
@@ -54,6 +56,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import OutputDialog from "./OutputDialog";
 import { getDateRange } from '@/lib/utils'
 import dayjs from 'dayjs'
@@ -108,6 +111,9 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters(['logininfo'])
+  },
   methods: {
     timeChange(val) {
       this.fetch(timeEnum[val]);
@@ -144,8 +150,9 @@ export default {
   },
   async mounted () {
     this.initTable()
+    this.source = this.logininfo._doc.address === '超级管理员'? '光明眼镜': this.logininfo._doc.address;
     this.sources = [{username:'all', address:'全部'}].concat((await this.$http.get("rest/admin_users")).data);
-    // const res = await this.$http.get("admin_users");
+    this.sources = this.sources.filter(item=> !['admin', 'superadmin'].includes(item.username))
     // this.items = res.data;
   },
 };

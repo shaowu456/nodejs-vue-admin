@@ -13,7 +13,13 @@ Vue.mixin({   //mixin 混合入 为所有的vue对象都添加该代码块
   computed: {
     uploadUrl(){
       return this.$http.defaults.baseURL + '/upload'
+    },
+    isSuperAdmin(){
+      return ['admin', 'superadmin'].includes(this.$store.state.user.logininfo._doc.username)
     }
+  },
+  mounted(){
+    // console.log('mixin~~~', this.$store)
   },
   methods:{
     getAuthHeader(){

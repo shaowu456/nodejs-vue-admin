@@ -2,11 +2,10 @@
   <div>
     <el-form label-position="right" inline class="search-header">
       <el-row>
-        <!-- <el-button size="medium" class="goodsbtnbox" @click="query" type="primary">查询</el-button> -->
-        <el-button size="medium" class="goodsbtnbox" @click="createClass" type="primary">新建分类</el-button>
+        <!-- <el-button size="medium" class="goodsbtnbox" @click="createClass" type="primary">新建分类</el-button> -->
         <el-button size="medium" class="goodsbtnbox" @click="createGood" type="primary">新建商品</el-button>
         <el-button size="medium" class="goodsbtnbox" @click="resetQuery">重置</el-button>
-        <!-- <el-button size="medium" class="goodsbtnbox" @click="importXlsx">导入</el-button> -->
+        <!-- <el-button v-if="isSuperAdmin" size="medium" class="goodsbtnbox" @click="importXlsx">导入</el-button> -->
         <!-- <el-button size="medium" class="goodsbtnbox" @click="create">新建</el-button> -->
         <span style="color:#606266;font-size: 13px;margin-left: 16px;">来源：</span>
         <el-select v-model="source"  @change="fetch()">
@@ -36,7 +35,7 @@
       <div class="right-pane">
         <el-table border stripe size="mini" :data="goods">
           <!-- <el-table-column prop="_id" label="ID" width="240"></el-table-column> -->
-          <el-table-column label="编号">
+          <el-table-column width="60" label="序号">
             <template slot-scope="scop">
               {{scop.$index+1}}
             </template>
@@ -62,6 +61,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -91,8 +91,12 @@ export default {
       // 所选分类的 id
       class: 'all', 
       source: '全部',
-      sources: []
+      sources: [],
+      isAdmin: false
     };
+  },
+  computed: {
+    ...mapGetters(['logininfo'])
   },
   async created() {
     const goodsClass = await this.$http.get('/findGoodsByClassLikeGlasses');
@@ -102,8 +106,8 @@ export default {
         label: item.name
       }
     })
-    this.fetch();
-    this.sources = [{username:'all', address:'全部'}].concat((await this.$http.get("rest/admin_users")).data);
+    console.log('isSuperAdmin')
+    this.resetQuery();
   },
   methods: {
     createClass() {
@@ -136,6 +140,7 @@ export default {
       await fetch('data.json').then((response) => response.json())
       .then(async (json) => {
         console.log('~~~data', json)
+        // 光明眼镜 佳镜眼镜(城南) 佳镜眼镜(后坝)
         for(let i of json){
           console.log(i,json)
           await this.$http.post('rest/goods', {
@@ -146,10 +151,10 @@ export default {
             "salesPrice": i.salesPrice,
             "MembershipPrice": i.MembershipPrice,
             "count": i.count,
+            "source": this.source
           })
         }
       });
-      
     },
     async query() {
       // const res = await this.$http.get(`/findListByParent/${this.parent}`, { name: '天' });
@@ -163,8 +168,12 @@ export default {
       );
       this.parentList = res.data;
     },
-    resetQuery() {
+    async resetQuery() {
       this.$refs.tree.setCurrentKey('all')
+      this.source = this.logininfo._doc.address === '超级管理员'? '光明眼镜': this.logininfo._doc.address;
+      // this.sources = [{username:'all', address:'全部'}].concat((await this.$http.get("rest/admin_users")).data);
+      this.sources = (await this.$http.get("rest/admin_users")).data;
+      this.sources = this.sources.filter(item=> !['admin', 'superadmin'].includes(item.username))
       this.fetch();
     },
     async fetch() {

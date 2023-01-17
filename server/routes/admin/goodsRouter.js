@@ -41,15 +41,16 @@
     const items = await Model.find(classParam).setOptions(queryOptions)  // 关联查询parent
     res.send(items)
   })
-  //  通过助记码查询商品
-  app.get('/admin/api/findGoodsByNamecode/:id', authMiddleware(), async (req, res) => {
+  //  通过助记码+source查询商品
+  app.post('/admin/api/findGoodsByNamecode/', authMiddleware(), async (req, res) => {
     const Model = require(`../../models/Good`)
+    const { nameCode, source } = req.body
     const queryOptions = {}
     queryOptions.populate = 'class'
     // $options:"$i" 不区分大小写
     // const classParam = {nameCode: {$regex: req.params.id, $options:"$i"}}
-    const classParam = {nameCode: new RegExp(req.params.id, 'i') }
-    console.log('params', req.params, classParam)
+    const classParam = {nameCode: new RegExp(nameCode, 'i'), source }
+    console.log('params~~findGoodsByNamecode', classParam)
     const items = await Model.find(classParam).setOptions(queryOptions)  // 关联查询parent
     res.send(items)
   })
