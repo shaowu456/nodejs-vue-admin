@@ -15,7 +15,7 @@ const routes = [
     path: '/',
     name: 'test',
     component: MainTest,
-    redirect: '/items/list',
+    redirect: '/goods/list',
     children: [
       { path: '/categories/create', component: () => import('../views/category/CategoryEdit.vue') },
       // props true 可以直接路由跳转过去的 id 带到目标组件的 props里
