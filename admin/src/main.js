@@ -16,11 +16,14 @@ Vue.mixin({   //mixin 混合入 为所有的vue对象都添加该代码块
     },
     isSuperAdmin(){
       return ['admin', 'superadmin'].includes(this.$store.state.user.logininfo._doc.username)
+    },
+    loginInfo(){
+      return this.$store.state.user.logininfo._doc
     }
   },
-  mounted(){
-    // console.log('mixin~~~', this.$store)
-  },
+  // mounted(){
+  //   console.log('mixin~~~', this.$store.state.user.logininfo)
+  // },
   methods:{
     getAuthHeader(){
       return {
