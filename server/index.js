@@ -13,6 +13,7 @@ app.use(express.json())
 app.use('/admin/', express.static(__dirname + '/admin'))
 //托管静态文件 uploads目录下为静态文件夹，可以通过uploads路径来访问
 app.use('/uploads', express.static(__dirname + '/uploads'))
+app.use('/personalImgs', express.static(__dirname + '/personalImgs'))
 
 require('./plugins/db')(app)
 require('./routes/admin')(app)

@@ -22,6 +22,10 @@ const routes = [
       { path: '/categories/edit/:id', component: () => import('../views/category/CategoryEdit.vue'), props: true },
       { path: '/categories/list', component: () => import('../views/category/TestList.vue') },
 
+      { path: '/personal/create', component: () => import('../views/personal/PersonalEdit.vue') },
+      { path: '/personal/edit/:id', component: () => import('../views/personal/PersonalEdit.vue'), props: true },
+      { path: '/personal/list', component: () => import('../views/personal/PersonalList.vue') },
+      
       { path: '/items/create', component: () => import('../views/item/ItemEdit.vue') },
       { path: '/items/edit/:id', component: () => import('../views/item/ItemEdit.vue'), props: true },
       { path: '/items/list', component: () => import('../views/item/ItemList.vue') },
