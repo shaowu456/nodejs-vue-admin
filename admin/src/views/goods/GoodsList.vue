@@ -8,7 +8,7 @@
         <!-- <el-button v-if="isSuperAdmin" size="medium" class="goodsbtnbox" @click="importXlsx">导入</el-button> -->
         <!-- <el-button size="medium" class="goodsbtnbox" @click="create">新建</el-button> -->
         <span style="color:#606266;font-size: 13px;margin-left: 16px;">来源：</span>
-        <el-select v-model="source"  @change="fetch()">
+        <el-select :disabled="!isSuperAdmin" v-model="source"  @change="fetch()">
           <el-option
             v-for="item in sources"
             :key="item.username"
@@ -43,12 +43,12 @@
           <el-table-column prop="class.name" label="类别"></el-table-column>
           <el-table-column prop="name" label="商品名称"></el-table-column>
           <el-table-column prop="nameCode" label="助记码"></el-table-column>
-          <el-table-column prop="originPrice" label="进价"></el-table-column>
+          <!-- <el-table-column prop="originPrice" label="进价"></el-table-column>
           <el-table-column prop="salesPrice" label="零售价"></el-table-column>
-          <el-table-column prop="MembershipPrice" label="会员价"></el-table-column>
+          <el-table-column prop="MembershipPrice" label="会员价"></el-table-column> -->
           <el-table-column prop="count" label="现有库存"></el-table-column>
           <el-table-column prop="source" label="来源"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="180" v-if=" isSuperAdmin || source==logininfo._doc.address">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="$router.push(`/goods/edit/${scope.row._id}`)">编辑</el-button>
               <el-button type="text" size="small" @click="remove(scope.row)">删除</el-button>

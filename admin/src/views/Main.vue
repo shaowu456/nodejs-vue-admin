@@ -13,8 +13,8 @@
             <template slot="title">物品</template>
             <el-menu-item index="/items/create">新建物品</el-menu-item>
             <el-menu-item index="/items/list">物品列表</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group>
+          </el-menu-item-group> -->
+          <!-- <el-menu-item-group>
             <template slot="title">英雄</template>
             <el-menu-item index="/heroes/create">新建英雄</el-menu-item>
             <el-menu-item index="/heroes/list">英雄列表</el-menu-item>
@@ -29,6 +29,11 @@
             <el-menu-item index="/goods/create">新建商品</el-menu-item>
             <el-menu-item index="/goods/list">库存管理</el-menu-item>
             <el-menu-item index="/goods/output">出库管理</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group>
+            <template slot="title">个性化</template>
+            <el-menu-item index="/personal/create">新建个性化</el-menu-item>
+            <el-menu-item index="/personal/list">个性化列表</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="2" v-if="isSuperAdmin">

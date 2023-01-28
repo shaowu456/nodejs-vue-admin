@@ -26,7 +26,7 @@
         <el-input v-model="model.count"></el-input>
       </el-form-item>
       <el-form-item label="来源">
-        <el-select v-model="model.source">
+        <el-select v-model="model.source" :disabled="!isSuperAdmin">
           <el-option
             v-for="item in sources"
             :key="item.username"
@@ -90,8 +90,10 @@ export default {
   },
   async created() {
     this.fetchParents()
+    this.model.source = this.loginInfo.address === '超级管理员'? '光明眼镜': this.loginInfo.address;
     this.id && this.fetch()
     this.sources = (await this.$http.get("rest/admin_users")).data;
+    this.sources = this.sources.filter(item=> !['admin', 'superadmin'].includes(item.username))
   }
 }
 </script>
