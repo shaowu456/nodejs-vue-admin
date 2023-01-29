@@ -27,7 +27,7 @@
         <span style="color:#606266;font-size: 13px;">{{startTime}} 至 {{endTime}}</span>
         <div class="sum-label">
           <span style="margin-right:16px">数量：{{sum.num}}</span>
-          <span>金额：{{sum.price}}</span>
+          <!-- <span>金额：{{sum.price}}</span> -->
         </div>
       </el-row>
     </el-form>
@@ -41,7 +41,7 @@
       <el-table-column prop="name" sortable label="商品名称" min-width="50"></el-table-column>
       <!-- <el-table-column prop="phone" label="单价" min-width="60"></el-table-column> -->
       <el-table-column prop="num" sortable label="数量" min-width="30"></el-table-column>
-      <el-table-column prop="price" sortable label="合计金额" min-width="50"></el-table-column>
+      <!-- <el-table-column prop="price" sortable label="合计金额" min-width="50"></el-table-column> -->
       <el-table-column prop="time" sortable label="出库时间" min-width="100">
         <template slot-scope="scop">
           {{formatTime(scop.row.time)}}
