@@ -16,9 +16,9 @@
       <el-form-item label="剩余库存" :label-width="formLabelWidth">
         {{ form.leftCount }}
       </el-form-item>
-      <el-form-item label="金额（元）" :label-width="formLabelWidth" prop="price">
+      <!-- <el-form-item label="金额（元）" :label-width="formLabelWidth" prop="price">
         <el-input class="input-price" @keyup.enter.native="confirm()" v-model="form.price" autocomplete="off"></el-input>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取 消</el-button>
@@ -48,10 +48,10 @@ export default {
       rules: {
         refGood: [
           { required: true, message: '请选择商品', trigger: 'change' },
-        ],
-        price: [
-          { required: true, message: '请输入金额（元）', trigger: 'blur' }
-        ],
+        ]
+        // price: [
+        //   { required: true, message: '请输入金额（元）', trigger: 'blur' }
+        // ],
       }
     };
   },
