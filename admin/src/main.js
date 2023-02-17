@@ -9,23 +9,23 @@ Vue.prototype.$http = http
 
 Vue.config.productionTip = false
 
-Vue.mixin({   //mixin 混合入 为所有的vue对象都添加该代码块
+Vue.mixin({ // mixin 混合入 为所有的vue对象都添加该代码块
   computed: {
-    uploadUrl(){
+    uploadUrl () {
       return this.$http.defaults.baseURL + '/upload'
     },
-    isSuperAdmin(){
+    isSuperAdmin () {
       return ['admin', 'superadmin'].includes(this.$store.state.user.logininfo._doc.username)
     },
-    loginInfo(){
+    loginInfo () {
       return this.$store.state.user.logininfo._doc
     }
   },
   // mounted(){
   //   console.log('mixin~~~', this.$store.state.user.logininfo)
   // },
-  methods:{
-    getAuthHeader(){
+  methods: {
+    getAuthHeader () {
       return {
         Authorization: `Bearer ${localStorage.token || ''}`
       }
